@@ -43,7 +43,7 @@ public class GenericDAO implements DAO<Object> {
     }
 
     @Override
-    public Object buscarId(Class c, Long id) throws PersistenceException {
+    public Object buscarId(Class c, int id) throws PersistenceException {
         return em.find(c, id);
     }
 }

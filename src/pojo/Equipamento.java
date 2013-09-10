@@ -4,7 +4,9 @@
  */
 package pojo;
 
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -13,11 +15,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -31,27 +34,34 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Equipamento.findAll", query = "SELECT e FROM Equipamento e"),
     @NamedQuery(name = "Equipamento.findByIdequipamento", query = "SELECT e FROM Equipamento e WHERE e.idequipamento = :idequipamento"),
-    @NamedQuery(name = "Equipamento.findByDescricao", query = "SELECT e FROM Equipamento e WHERE e.descricao = :descricao")})
+    @NamedQuery(name = "Equipamento.findByDescricao", query = "SELECT e FROM Equipamento e WHERE e.descricao = :descricao"),
+    @NamedQuery(name = "Equipamento.findBySerie", query = "SELECT e FROM Equipamento e WHERE e.serie = :serie")})
 public class Equipamento implements Serializable {
+    @Transient
+    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "idequipamento")
     private Integer idequipamento;
     @Column(name = "descricao")
     private String descricao;
-    @OneToMany(mappedBy = "idEquipamento")
+    @Column(name = "serie")
+    private String serie;
+    @ManyToMany(mappedBy = "equipamentoList")
     private List<Chamado> chamadoList;
     @JoinColumn(name = "id_setor", referencedColumnName = "idsetor")
     @ManyToOne
     private Setor idSetor;
 
     public Equipamento() {
+        chamadoList = new ArrayList<>();
     }
 
     public Equipamento(Integer idequipamento) {
         this.idequipamento = idequipamento;
+        chamadoList = new ArrayList<>();
     }
 
     public Integer getIdequipamento() {
@@ -59,7 +69,9 @@ public class Equipamento implements Serializable {
     }
 
     public void setIdequipamento(Integer idequipamento) {
+        Integer oldIdequipamento = this.idequipamento;
         this.idequipamento = idequipamento;
+        changeSupport.firePropertyChange("idequipamento", oldIdequipamento, idequipamento);
     }
 
     public String getDescricao() {
@@ -67,7 +79,19 @@ public class Equipamento implements Serializable {
     }
 
     public void setDescricao(String descricao) {
+        String oldDescricao = this.descricao;
         this.descricao = descricao;
+        changeSupport.firePropertyChange("descricao", oldDescricao, descricao);
+    }
+
+    public String getSerie() {
+        return serie;
+    }
+
+    public void setSerie(String serie) {
+        String oldSerie = this.serie;
+        this.serie = serie;
+        changeSupport.firePropertyChange("serie", oldSerie, serie);
     }
 
     @XmlTransient
@@ -84,7 +108,9 @@ public class Equipamento implements Serializable {
     }
 
     public void setIdSetor(Setor idSetor) {
+        Setor oldIdSetor = this.idSetor;
         this.idSetor = idSetor;
+        changeSupport.firePropertyChange("idSetor", oldIdSetor, idSetor);
     }
 
     @Override
@@ -109,7 +135,13 @@ public class Equipamento implements Serializable {
 
     @Override
     public String toString() {
-        return "pojo.Equipamento[ idequipamento=" + idequipamento + " ]";
+        return descricao;
     }
     
+    public void addChamado( Chamado c) {
+        chamadoList.add(c);
+    }
+    
+    
+
 }

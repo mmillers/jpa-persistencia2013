@@ -5,6 +5,7 @@
 package pojo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -34,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 public class TipoUsuario implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "idtipo_usuario")
     private Integer idtipoUsuario;
@@ -46,10 +47,12 @@ public class TipoUsuario implements Serializable {
     private List<Usuario> usuarioList;
 
     public TipoUsuario() {
+        usuarioList = new ArrayList<>();
     }
 
     public TipoUsuario(Integer idtipoUsuario) {
         this.idtipoUsuario = idtipoUsuario;
+        usuarioList = new ArrayList<>();
     }
 
     public Integer getIdtipoUsuario() {
@@ -107,7 +110,11 @@ public class TipoUsuario implements Serializable {
 
     @Override
     public String toString() {
-        return "pojo.TipoUsuario[ idtipoUsuario=" + idtipoUsuario + " ]";
+        return descricao;
+    }
+    
+    public void addUsuario (Usuario u) {
+        usuarioList.add(u);
     }
     
 }

@@ -5,6 +5,7 @@
 package pojo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -34,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Setor implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "idsetor")
     private Integer idsetor;
@@ -46,10 +47,12 @@ public class Setor implements Serializable {
     private List<Equipamento> equipamentoList;
 
     public Setor() {
+        equipamentoList = new ArrayList<>();
     }
 
     public Setor(Integer idsetor) {
         this.idsetor = idsetor;
+        equipamentoList = new ArrayList<>();
     }
 
     public Integer getIdsetor() {
@@ -107,7 +110,11 @@ public class Setor implements Serializable {
 
     @Override
     public String toString() {
-        return "pojo.Setor[ idsetor=" + idsetor + " ]";
+        return descricao;
+    }
+    
+    public void addEquipamento(Equipamento e){
+        equipamentoList.add(e);
     }
     
 }

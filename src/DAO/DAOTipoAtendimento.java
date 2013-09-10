@@ -14,8 +14,28 @@ public class DAOTipoAtendimento {
         this.em = em;
     }
 
-    public List<TipoAtendimento> buscarAll(Class c) throws PersistenceException {
+    public List<TipoAtendimento> buscarAll() throws PersistenceException {
         Query query = em.createQuery("SELECT e FROM TipoAtendimento e");
         return query.getResultList();
+    }
+    
+    public TipoAtendimento encontraTipo(String descricao) {
+        List<TipoAtendimento> lista = buscarAll();
+        for (TipoAtendimento set : lista) {
+            if (set.getDescricao().equals(descricao)) {
+                return set;
+            }
+        }
+        return null;
+    }
+    
+    public long procuraTipo(String descricao) {
+        List<TipoAtendimento> lista = buscarAll();
+        for (TipoAtendimento us : lista) {
+            if (us.getDescricao().equals(descricao)) {
+                return us.getIdtipoAtendimento();
+            }
+        }
+        return -1;
     }
 }
